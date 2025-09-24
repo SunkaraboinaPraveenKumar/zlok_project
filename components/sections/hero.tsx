@@ -13,7 +13,6 @@ import {
   Shield,
 } from "lucide-react";
 import { AnimatedText, MagicText } from "@/components/ui/magic-text";
-import { GradientButton } from "@/components/ui/gradient-button";
 import { FloatingElements } from "@/components/ui/floating-elements";
 import { Button } from "@/components/ui/button";
 

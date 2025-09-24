@@ -24,7 +24,7 @@ import { ScrollProgress } from "../ui/scroll-progress";
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
-  const isAuthenticated = false; // Replace with actual auth state
+  const isAuthenticated = false;
 
   const navigation = [
     { name: "Spaces", href: "/spaces" },
