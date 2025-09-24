@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -19,15 +20,20 @@ export default function SignUpForm() {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const data = {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-        name: formData.get("name") as string,
-        phone: formData.get("phone") as string,
-        role: "user",
-      };
+      const password = formData.get("password") as string;
+      const email = formData.get("email") as string;
+      const name = formData.get("name") as string;
+      const phone = formData.get("phone") as string;
 
-      await createUser(data);
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await createUser({
+        email,
+        hashedPassword,
+        name,
+        phone,
+        role: "user",
+      });
       toast.success("Account created successfully!");
       router.push("/auth/signin");
     } catch (error: any) {
