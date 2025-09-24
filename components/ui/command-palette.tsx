@@ -2,7 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Home, Users, Calendar, MapPin, CreditCard, Settings, User } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, Settings, LogOut, Search, Home, Users, Calendar, MapPin, CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,8 +26,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
+import { ScrollProgress } from "../ui/scroll-progress";
+
+// Radix dialog title + visually hidden wrapper for accessibility
+import { DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface CommandPaletteProps {
   open: boolean;
@@ -61,6 +81,11 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
+      {/* Add a DialogTitle (visually hidden) to satisfy Radix accessibility requirement */}
+      <VisuallyHidden>
+        <DialogTitle>Command Palette</DialogTitle>
+      </VisuallyHidden>
+
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>

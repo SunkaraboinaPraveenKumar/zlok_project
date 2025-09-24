@@ -1,4 +1,3 @@
-// lib/auth.ts
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -6,7 +5,6 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import bcrypt from "bcryptjs";
 
-// Create a Convex client for server-side operations
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export const authOptions: NextAuthOptions = {
@@ -115,20 +113,21 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
   },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.sub!;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-  },
-  debug: process.env.NODE_ENV === "development",
+  // callbacks: {
+  //   async jwt({ token, user }) {
+  //     if (user) {
+  //       console.log(user);
+  //       token.role = user.role;
+  //     }
+  //     return token;
+  //   },
+  //   async session({ session, token }) {
+  //     if (token && session.user) {
+  //       session.user.id = token.sub!;
+  //       session.user.role = token.role as string;
+  //     }
+  //     return session;
+  //   },
+  // },
+  // debug: process.env.NODE_ENV === "development",
 };

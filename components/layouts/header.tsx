@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
@@ -132,6 +133,7 @@ export function Header() {
                 <Search className="h-5 w-5" />
               </Button>
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTitle></SheetTitle>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="sm">
                     <AnimatePresence mode="wait" initial={false}>
