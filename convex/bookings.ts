@@ -9,12 +9,12 @@ export const createBooking = mutation({
     startTime: v.number(),
     endTime: v.number(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     // Check for conflicts
     const existingBookings = await ctx.db
       .query("bookings")
-      .withIndex("by_hub", (q) => q.eq("hubId", args.hubId))
-      .filter((q) => 
+      .withIndex("by_hub", (q:any) => q.eq("hubId", args.hubId))
+      .filter((q:any) => 
         q.and(
           q.eq(q.field("spaceId"), args.spaceId),
           q.eq(q.field("status"), "confirmed"),
@@ -45,10 +45,10 @@ export const createBooking = mutation({
 
 export const getUserBookings = query({
   args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     return await ctx.db
       .query("bookings")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q:any) => q.eq("userId", args.userId))
       .collect();
   },
 });
@@ -59,7 +59,7 @@ export const updateBookingStatus = mutation({
     status: v.string(),
     paymentRef: v.optional(v.id("payments")),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     const { bookingId, ...updates } = args;
     await ctx.db.patch(bookingId, updates);
     return bookingId;
@@ -72,7 +72,7 @@ export const getAvailableSlots = query({
     spaceId: v.string(),
     date: v.number(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     const startOfDay = new Date(args.date);
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(args.date);
@@ -80,8 +80,8 @@ export const getAvailableSlots = query({
 
     const bookings = await ctx.db
       .query("bookings")
-      .withIndex("by_hub", (q) => q.eq("hubId", args.hubId))
-      .filter((q) =>
+      .withIndex("by_hub", (q:any) => q.eq("hubId", args.hubId))
+      .filter((q:any) =>
         q.and(
           q.eq(q.field("spaceId"), args.spaceId),
           q.eq(q.field("status"), "confirmed"),
@@ -99,7 +99,7 @@ export const getAvailableSlots = query({
       const slotEnd = new Date(args.date);
       slotEnd.setHours(hour + 1, 0, 0, 0);
 
-      const isBooked = bookings.some(booking =>
+      const isBooked = bookings.some((booking: any) =>
         booking.startTime < slotEnd.getTime() && booking.endTime > slotStart.getTime()
       );
 

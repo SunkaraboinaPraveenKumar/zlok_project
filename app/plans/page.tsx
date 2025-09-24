@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function PlansPage() {
   const [isYearly, setIsYearly] = useState(false);
@@ -205,7 +206,7 @@ export default function PlansPage() {
                       </Badge>
                     </div>
                   )}
-                  
+
                   <Card className={`h-full ${plan.popular ? 'ring-2 ring-blue-500 shadow-xl' : 'shadow-lg'} hover:shadow-xl transition-all duration-300`}>
                     <CardHeader className="text-center pb-4">
                       <div className={`inline-flex w-12 h-12 rounded-full bg-gradient-to-r ${plan.color} items-center justify-center mb-4 mx-auto`}>
@@ -247,11 +248,10 @@ export default function PlansPage() {
                     <CardFooter>
                       <Button
                         onClick={() => handleSelectPlan(plan.id)}
-                        className={`w-full group ${
-                          plan.popular
+                        className={`w-full group ${plan.popular
                             ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
                             : 'bg-gray-900 hover:bg-gray-800'
-                        }`}
+                          }`}
                         size="lg"
                       >
                         Get Started
@@ -300,9 +300,11 @@ export default function PlansPage() {
           <p className="text-gray-600 mb-4">
             Need a custom plan for your team?
           </p>
-          <Button variant="outline" size="lg">
-            Contact Sales
-          </Button>
+          <Link href={"/contact"}>
+            <Button variant="outline" size="lg">
+              Contact Sales
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </div>

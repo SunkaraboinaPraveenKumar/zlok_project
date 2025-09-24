@@ -5,6 +5,7 @@ export default defineSchema({
   users: defineTable({
     name: v.string(),
     email: v.string(),
+    password: v.string(), // Storing hashed password
     phone: v.optional(v.string()),
     role: v.union(v.literal("user"), v.literal("admin"), v.literal("partner")),
     avatarUrl: v.optional(v.string()),

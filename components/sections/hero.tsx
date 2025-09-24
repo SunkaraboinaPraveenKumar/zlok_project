@@ -2,7 +2,16 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Play, Users, MapPin, Calendar } from "lucide-react";
+import {
+  ArrowRight,
+  Play,
+  Users,
+  MapPin,
+  Calendar,
+  Building2,
+  Zap,
+  Shield,
+} from "lucide-react";
 import { AnimatedText, MagicText } from "@/components/ui/magic-text";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { FloatingElements } from "@/components/ui/floating-elements";
@@ -15,105 +24,275 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   const stats = [
-    { icon: Users, value: "10K+", label: "Active Members" },
-    { icon: MapPin, value: "50+", label: "Locations" },
-    { icon: Calendar, value: "1000+", label: "Events Monthly" },
+    {
+      icon: Users,
+      value: "10K+",
+      label: "Active Members",
+      color: "from-blue-600 to-blue-700",
+    },
+    {
+      icon: MapPin,
+      value: "50+",
+      label: "Prime Locations",
+      color: "from-slate-600 to-slate-700",
+    },
+    {
+      icon: Calendar,
+      value: "1000+",
+      label: "Monthly Events",
+      color: "from-indigo-600 to-indigo-700",
+    },
+  ];
+
+  const features = [
+    {
+      icon: Building2,
+      title: "Premium Spaces",
+      desc: "Modern co-working environments",
+    },
+    {
+      icon: Zap,
+      title: "High-Speed Connectivity",
+      desc: "Enterprise-grade infrastructure",
+    },
+    { icon: Shield, title: "24/7 Security", desc: "Safe and secure facilities" },
   ];
 
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-hidden">
-      {/* Background with parallax */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50"
-        style={{ y: backgroundY }}
-      />
+    <div
+      ref={containerRef}
+      className="relative min-h-screen overflow-hidden bg-white"
+    >
+      {/* Professional background with subtle gradients */}
+      <motion.div className="absolute inset-0" style={{ y: backgroundY }}>
+        {/* Main background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50/30" />
+        {/* Floating animated elements */}
+        <FloatingElements
+          // @ts-ignore
+          elements={[
+            {
+              icon: Zap,
+              size: 40,
+              color: "text-blue-400/60",
+              x: "10%",
+              y: "20%",
+              speed: 0.5,
+            },
+            {
+              icon: Users,
+              size: 36,
+              color: "text-indigo-400/60",
+              x: "80%",
+              y: "30%",
+              speed: 0.6,
+            },
+            {
+              icon: Shield,
+              size: 44,
+              color: "text-slate-400/60",
+              x: "50%",
+              y: "70%",
+              speed: 0.4,
+            },
+          ]}
+        />
 
-      {/* Floating elements */}
-      <FloatingElements />
+        {/* Floating animated elements */}
+        <FloatingElements
+          // @ts-ignore
+          elements={[
+            {
+              icon: Zap,
+              size: 40,
+              color: "text-blue-400/60",
+              x: "10%",
+              y: "20%",
+              speed: 0.5,
+            },
+            {
+              icon: Users,
+              size: 36,
+              color: "text-indigo-400/60",
+              x: "80%",
+              y: "30%",
+              speed: 0.6,
+            },
+            {
+              icon: Shield,
+              size: 44,
+              color: "text-slate-400/60",
+              x: "50%",
+              y: "70%",
+              speed: 0.4,
+            },
+          ]}
+        />
 
-      {/* Grid pattern overlay */}
-      <div
-        className={`absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\\\"60\\\" height=\\\"60\\\" viewBox=\\\"0 0 60 60\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\"%3E%3Cg fill=\\\"none\\\" fill-rule=\\\"evenodd\\\"%3E%3Cg fill=\\\"%239C92AC\\\" fill-opacity=\\\"0.1\\\"%3E%3Cpath d=\\\"m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\\\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30`}
-      />
+        {/* Floating animated elements */}
+        <FloatingElements
+          // @ts-ignore
+          elements={[
+            {
+              icon: Zap,
+              size: 40,
+              color: "text-blue-400/60",
+              x: "10%",
+              y: "20%",
+              speed: 0.5,
+            },
+            {
+              icon: Users,
+              size: 36,
+              color: "text-indigo-400/60",
+              x: "80%",
+              y: "30%",
+              speed: 0.6,
+            },
+            {
+              icon: Shield,
+              size: 44,
+              color: "text-slate-400/60",
+              x: "50%",
+              y: "70%",
+              speed: 0.4,
+            },
+          ]}
+        />
+
+        {/* Floating animated elements */}
+        <FloatingElements
+          // @ts-ignore
+          elements={[
+            {
+              icon: Zap,
+              size: 40,
+              color: "text-blue-400/60",
+              x: "10%",
+              y: "20%",
+              speed: 0.5,
+            },
+            {
+              icon: Users,
+              size: 36,
+              color: "text-indigo-400/60",
+              x: "80%",
+              y: "30%",
+              speed: 0.6,
+            },
+            {
+              icon: Shield,
+              size: 44,
+              color: "text-slate-400/60",
+              x: "50%",
+              y: "70%",
+              speed: 0.4,
+            },
+          ]}
+        />
+        {/* Geometric shapes for professional look */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-bl from-blue-50/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-1/4 h-2/3 bg-gradient-to-tr from-slate-50/30 to-transparent" />
+
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.03)_1px,transparent_1px)] bg-[size:32px_32px]" />
+      </motion.div>
 
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="pt-32 pb-20 text-center"
-            style={{ y: textY }}
-          >
+          <motion.div className="pt-24 pb-16" style={{ y: textY }}>
+            {/* Professional badge */}
+            <MagicText className="mb-8 flex justify-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Hyderabad's Leading Workspace Solutions
+              </motion.div>
+            </MagicText>
+
             {/* Main heading */}
-            <MagicText className="mb-6">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight">
-                <AnimatedText text="Redefine Your" />
-                <br />
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-                  <AnimatedText text="Lifestyle" />
-                </span>
-              </h1>
-            </MagicText>
+            <div className="text-center mb-8">
+              <MagicText>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
+                  <AnimatedText text="Elevate Your" />
+                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block">
+                    <AnimatedText text="Work Experience" />
+                  </span>
 
-            {/* Subtitle */}
-            <MagicText delay={0.3} className="mb-8">
-              <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Premium co-working spaces, co-living experiences, and vibrant
-                community events across India's major cities.
-              </p>
-            </MagicText>
+                </h1>
+              </MagicText>
 
-            {/* CTA Buttons */}
-            <MagicText delay={0.6} className="mb-12">
+              {/* Professional subtitle */}
+              <MagicText delay={0.3}>
+                <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
+                  Transform your productivity with premium co-working spaces,
+                  integrated co-living solutions, and professional networking
+                  opportunities across India's business hubs.
+                </p>
+              </MagicText>
+            </div>
+
+            {/* CTA */}
+            <MagicText delay={0.6} className="mb-16">
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <GradientButton className="group">
-                  Get Started Today
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  Start Your Journey
                   <motion.div
                     className="inline-block ml-2"
-                    animate={{ x: [0, 4, 0] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
+                    animate={{ x: [0, 3, 0] }}
+                    transition={{ repeat: Infinity, duration: 2.5 }}
                   >
                     <ArrowRight className="w-5 h-5" />
                   </motion.div>
-                </GradientButton>
+                </Button>
 
                 <Button
                   variant="outline"
-                  className="group border-2 border-gray-300 hover:border-blue-500"
+                  className="group border-2 border-slate-300 hover:border-blue-500 px-8 py-3 rounded-lg font-semibold bg-white/80 backdrop-blur-sm"
                 >
                   <Play className="w-5 h-5 mr-2 group-hover:text-blue-500 transition-colors" />
-                  Watch Demo
+                  Schedule a Tour
                 </Button>
               </div>
             </MagicText>
 
             {/* Stats */}
             <motion.div
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-16"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
             >
-              {stats.map((stat) => {
+              {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
                   <motion.div
                     key={stat.label}
                     className="group"
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ y: -5 }}
                     transition={{ type: "spring", stiffness: 300 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                   >
-                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 group-hover:shadow-xl transition-all duration-300">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-8 shadow-md border border-slate-100 group-hover:shadow-lg transition-all duration-300 hover:border-blue-200">
                       <div className="flex flex-col items-center">
-                        <div className="mb-3 p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white group-hover:scale-110 transition-transform">
-                          <Icon className="w-6 h-6" />
+                        <div
+                          className={`mb-4 p-3 bg-gradient-to-r ${stat.color} rounded-xl text-white group-hover:scale-110 transition-transform shadow-lg`}
+                        >
+                          <Icon className="w-7 h-7" />
                         </div>
-                        <div className="text-3xl font-bold text-gray-900 mb-1">
+                        <div className="text-3xl font-bold text-slate-900 mb-2">
                           {stat.value}
                         </div>
-                        <div className="text-gray-600 text-sm font-medium">
+                        <div className="text-slate-600 font-medium">
                           {stat.label}
                         </div>
                       </div>
@@ -122,12 +301,48 @@ export function Hero() {
                 );
               })}
             </motion.div>
+
+            {/* Features */}
+            <motion.div
+              className="max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                {features.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <motion.div
+                      key={feature.title}
+                      className="flex items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg border border-slate-100 hover:shadow-md transition-all duration-300"
+                      whileHover={{ scale: 1.02 }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.3 + index * 0.1 }}
+                    >
+                      <div className="mr-4 p-2 bg-slate-100 rounded-lg">
+                        <Icon className="w-5 h-5 text-slate-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900 text-sm">
+                          {feature.title}
+                        </h3>
+                        <p className="text-slate-600 text-xs">{feature.desc}</p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
+      {/* Bottom border */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      </div>
     </div>
   );
 }

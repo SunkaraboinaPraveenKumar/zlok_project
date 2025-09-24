@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommandPalette } from "@/components/ui/command-palette";
+import { ScrollProgress } from "../ui/scroll-progress";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -178,6 +179,7 @@ export function Header() {
             </div>
           </div>
         </div>
+        <ScrollProgress className="h-0.5 bg-blue-600 dark:bg-blue-400" />
       </motion.header>
       <CommandPalette open={commandOpen} setOpen={setCommandOpen} />
     </>

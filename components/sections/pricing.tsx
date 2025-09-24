@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
@@ -76,8 +77,8 @@ export function Pricing() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-white relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -228,9 +229,11 @@ export function Pricing() {
           <p className="text-gray-600 mb-4">
             Need a custom plan for your team?
           </p>
-          <Button variant="outline" size="lg">
-            Contact Sales
-          </Button>
+          <Link href="/contact">
+            <Button variant="outline" size="lg">
+              Contact Sales
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

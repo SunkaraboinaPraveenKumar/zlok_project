@@ -25,7 +25,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ConvexProvider client={convex}>
-      {children}
+        {children}
       </ConvexProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

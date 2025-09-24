@@ -9,7 +9,7 @@ export const createPayment = mutation({
     amount: v.number(),
     status: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     return await ctx.db.insert("payments", {
       ...args,
       createdAt: Date.now(),
@@ -23,7 +23,7 @@ export const updatePaymentStatus = mutation({
     status: v.string(),
     razorpayPaymentId: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     const { paymentId, ...updates } = args;
     await ctx.db.patch(paymentId, updates);
     return paymentId;
@@ -32,17 +32,17 @@ export const updatePaymentStatus = mutation({
 
 export const getUserPayments = query({
   args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     return await ctx.db
       .query("payments")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q:any) => q.eq("userId", args.userId))
       .collect();
   },
 });
 
 export const getPaymentById = query({
   args: { paymentId: v.id("payments") },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     return await ctx.db.get(args.paymentId);
   },
 });

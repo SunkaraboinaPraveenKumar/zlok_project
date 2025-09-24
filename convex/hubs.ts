@@ -3,14 +3,14 @@ import { v } from "convex/values";
 
 export const getAllHubs = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx:any) => {
     return await ctx.db.query("hubs").collect();
   },
 });
 
 export const getHubById = query({
   args: { hubId: v.id("hubs") },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     return await ctx.db.get(args.hubId);
   },
 });
@@ -20,18 +20,18 @@ export const searchHubs = query({
     location: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     let hubs = await ctx.db.query("hubs").collect();
     
     if (args.location) {
-      hubs = hubs.filter(hub => 
+      hubs = hubs.filter((hub:any) =>
         hub.address.toLowerCase().includes(args.location!.toLowerCase())
       );
     }
     
     if (args.tags && args.tags.length > 0) {
-      hubs = hubs.filter(hub =>
-        args.tags!.some(tag => hub.tags.includes(tag))
+      hubs = hubs.filter((hub:any) =>
+        args.tags!.some((tag:any) => hub.tags.includes(tag))
       );
     }
     
@@ -56,7 +56,7 @@ export const createHub = mutation({
     tags: v.array(v.string()),
     amenities: v.array(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx:any, args:any) => {
     return await ctx.db.insert("hubs", args);
   },
 });

@@ -51,12 +51,24 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      // Here you would typically create the user account
-      // For now, we'll simulate success and redirect to sign in
-      toast.success("Account created successfully! Please sign in.");
-      router.push("/auth/signin");
-    } catch (error) {
-      toast.error("Something went wrong");
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        phone: formData.phone,
+        role: "user",
+        redirect: false,
+        isSignUp: true, // Custom flag to indicate signup
+      });
+
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Account created successfully! Please sign in.");
+        router.push("/auth/signin");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -224,6 +236,7 @@ export default function SignUpPage() {
                 <Checkbox
                   id="terms"
                   checked={acceptTerms}
+                  // @ts-ignore
                   onCheckedChange={setAcceptTerms}
                 />
                 <Label htmlFor="terms" className="text-sm text-gray-600">
