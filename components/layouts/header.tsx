@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, Settings, LogOut, Search, LayoutDashboard, LogIn } from "lucide-react";
+import { Menu, X, User, LogOut, Search, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,12 +22,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { ScrollProgress } from "../ui/scroll-progress";
+import { usePathname } from "next/navigation";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const isAuthenticated = !!session;
+  const pathname = usePathname();
 
   const navigation = [
     { name: "Spaces", href: "/spaces" },
@@ -58,19 +60,28 @@ export function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors relative group"
-                >
-                  {item.name}
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
-                    initial={false}
-                  />
-                </Link>
-              ))}
+              {navigation.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`px-3 py-2 text-sm font-medium relative group transition-colors ${
+                      isActive
+                        ? "text-blue-600"
+                        : "text-gray-700 hover:text-blue-600"
+                    }`}
+                  >
+                    {item.name}
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"
+                      animate={{ scaleX: isActive ? 1 : 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ originX: 0 }}
+                    />
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Desktop Auth */}
@@ -157,22 +168,29 @@ export function Header() {
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <nav className="flex flex-col space-y-4 mt-8">
-                    {navigation.map((item, index) => (
-                      <motion.div
-                        key={item.name}
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Link
-                          href={item.href}
-                          className="text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium block transition-colors"
-                          onClick={() => setIsOpen(false)}
+                    {navigation.map((item, index) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <motion.div
+                          key={item.name}
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
                         >
-                          {item.name}
-                        </Link>
-                      </motion.div>
-                    ))}
+                          <Link
+                            href={item.href}
+                            className={`px-3 py-2 text-base font-medium block transition-colors ${
+                              isActive
+                                ? "text-blue-600"
+                                : "text-gray-700 hover:text-blue-600"
+                            }`}
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {item.name}
+                          </Link>
+                        </motion.div>
+                      );
+                    })}
                     <div className="pt-4 space-y-2">
                       {isAuthenticated ? (
                         <>

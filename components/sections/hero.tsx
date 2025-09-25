@@ -11,12 +11,15 @@ import {
   Building2,
   Zap,
   Shield,
+  Phone,
 } from "lucide-react";
 import { AnimatedText, MagicText } from "@/components/ui/magic-text";
 import { FloatingElements } from "@/components/ui/floating-elements";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export function Hero() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -242,7 +245,7 @@ export function Hero() {
             {/* CTA */}
             <MagicText delay={0.6} className="mb-16">
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group">
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group" onClick={()=>router.push("/dashboard")}>
                   Start Your Journey
                   <motion.div
                     className="inline-block ml-2"
@@ -256,9 +259,10 @@ export function Hero() {
                 <Button
                   variant="outline"
                   className="group border-2 border-slate-300 hover:border-blue-500 px-8 py-3 rounded-lg font-semibold bg-white/80 backdrop-blur-sm"
+                  onClick={()=>router.push("/contact")}
                 >
-                  <Play className="w-5 h-5 mr-2 group-hover:text-blue-500 transition-colors" />
-                  Schedule a Tour
+                  <Phone className="w-5 h-5 mr-2 group-hover:text-blue-500 transition-colors" />
+                  Contact Us
                 </Button>
               </div>
             </MagicText>
