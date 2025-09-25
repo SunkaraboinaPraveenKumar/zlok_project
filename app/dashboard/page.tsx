@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Users, CreditCard, Bell, Settings, LogOut } from "lucide-react";
+import { Calendar, MapPin, Users, CreditCard} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,16 +13,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 
 export default function DashboardPage() {
-  const [user] = useState({
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "/avatars/01.png",
-    plan: "Professional",
-    usage: {
-      bookings: 12,
-      limit: 20,
-    },
-  });
+  const { data: session } = useSession();
+  const user = useQuery(api.auth.getUserByEmail, 
+    session?.user?.email ? { email: session.user.email } : "skip"
+  );
+  
+  const userBookings = useQuery(api.bookings.getUserBookings,
+    user ? { userId: user.id } : "skip"
+  );
 
   const recentBookings = [
     {
@@ -69,7 +69,7 @@ export default function DashboardPage() {
           className="mb-8"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user.name}!
+            Welcome back, {session?.user?.name || user?.name}!
           </h2>
           <p className="text-gray-600">
             Here's what's happening with your ZLOK account today.
@@ -89,7 +89,7 @@ export default function DashboardPage() {
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{user.plan}</div>
+              <div className="text-2xl font-bold">{user?.role || "User"}</div>
               <p className="text-xs text-muted-foreground">
                 Active subscription
               </p>
@@ -102,12 +102,12 @@ export default function DashboardPage() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{user.usage.bookings}</div>
+              <div className="text-2xl font-bold">{userBookings?.length || 0}</div>
               <p className="text-xs text-muted-foreground">
                 Bookings made
               </p>
               <Progress 
-                value={(user.usage.bookings / user.usage.limit) * 100} 
+                value={userBookings ? (userBookings.length / 20) * 100 : 0} 
                 className="mt-2"
               />
             </CardContent>

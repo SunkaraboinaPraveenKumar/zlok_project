@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { motion } from "framer-motion";
 import { Check, Star, Zap, Crown, ArrowRight, Users, MapPin, Calendar, Wifi } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -10,9 +13,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import Link from "next/link";
+import { loadRazorpay, createRazorpayOrder } from "@/lib/razorpay";
 
 export default function PlansPage() {
+  const { data: session } = useSession();
   const [isYearly, setIsYearly] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const createPayment = useMutation(api.payments.createPayment);
 
   const plans = [
     {
@@ -125,9 +133,52 @@ export default function PlansPage() {
     }).format(price);
   };
 
-  const handleSelectPlan = (planId: string) => {
-    toast.success(`Selected ${planId} plan! Redirecting to checkout...`);
-    // Here you would redirect to checkout or open payment modal
+  const handleSelectPlan = async (planId: string) => {
+    if (!session) {
+      toast.error("Please sign in to select a plan");
+      return;
+    }
+    
+    const plan = plans.find(p => p.id === planId);
+    if (!plan) return;
+    
+    const amount = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+    setIsLoading(true);
+    
+    try {
+      const order = await createRazorpayOrder(amount);
+      const isLoaded = await loadRazorpay();
+      
+      if (!isLoaded) {
+        throw new Error("Payment gateway failed to load");
+      }
+      
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+        amount: order.amount,
+        currency: order.currency,
+        name: "ZLOK",
+        description: `${plan.name} Plan Subscription`,
+        order_id: order.id,
+        handler: async (response: any) => {
+          toast.success("Subscription activated successfully!");
+        },
+        prefill: {
+          name: session.user?.name || "",
+          email: session.user?.email || "",
+        },
+        theme: {
+          color: "#3B82F6",
+        },
+      };
+      
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      toast.error("Failed to initiate payment");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

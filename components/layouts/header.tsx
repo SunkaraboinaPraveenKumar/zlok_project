@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, Settings, LogOut, Search } from "lucide-react";
+import { Menu, X, User, Settings, LogOut, Search, LayoutDashboard, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -25,7 +26,8 @@ import { ScrollProgress } from "../ui/scroll-progress";
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
-  const isAuthenticated = false;
+  const { data: session, status } = useSession();
+  const isAuthenticated = !!session;
 
   const navigation = [
     { name: "Spaces", href: "/spaces" },
@@ -90,22 +92,26 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="/avatars/01.png" alt="@user" />
-                        <AvatarFallback>U</AvatarFallback>
+                        <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || ""} />
+                        <AvatarFallback>{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuItem>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        <span>Dashboard</span>
+                      </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut()}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </DropdownMenuItem>
@@ -168,12 +174,25 @@ export function Header() {
                       </motion.div>
                     ))}
                     <div className="pt-4 space-y-2">
-                      <Button variant="outline" className="w-full" asChild>
-                        <Link href="/auth/signin">Sign In</Link>
-                      </Button>
-                      <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600" asChild>
-                        <Link href="/auth/signup">Get Started</Link>
-                      </Button>
+                      {isAuthenticated ? (
+                        <>
+                          <Button variant="outline" className="w-full" asChild>
+                            <Link href="/dashboard">Dashboard</Link>
+                          </Button>
+                          <Button variant="outline" className="w-full" onClick={() => signOut()}>
+                            Sign Out
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button variant="outline" className="w-full" asChild>
+                            <Link href="/auth/signin">Sign In</Link>
+                          </Button>
+                          <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600" asChild>
+                            <Link href="/auth/signup">Get Started</Link>
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </nav>
                 </SheetContent>

@@ -2,7 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from "@/components/ui/sonner";
-import { Header } from '@/components/layouts/header';
+import Provider from './provider';
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,11 +32,12 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <Header />
-        <div className='mt-14'>
-          {children}
-        </div>
-        <Toaster />
+        <Provider>
+          <div className='mt-14'>
+            {children}
+          </div>
+          <Toaster />
+        </Provider>
       </body>
     </html>
   );

@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { motion } from "framer-motion";
 import { Calendar, Clock, MapPin, Users, CreditCard, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,14 +14,23 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { loadRazorpay, createRazorpayOrder, verifyRazorpayPayment } from "@/lib/razorpay";
 import Image from "next/image";
 
 export default function BookingPage() {
+  const { data: session } = useSession();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedSpace, setSelectedSpace] = useState("");
   const [duration, setDuration] = useState("4");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  
+  const createBooking = useMutation(api.bookings.createBooking);
+  const createPayment = useMutation(api.payments.createPayment);
+  const user = useQuery(api.auth.getUserByEmail, 
+    session?.user?.email ? { email: session.user.email } : "skip"
+  );
 
   // Mock data - in real app, this would come from props or API
   const hub = {
@@ -42,18 +54,88 @@ export default function BookingPage() {
   const selectedSpaceDetails = hub.spaces.find(space => space.id === selectedSpace);
   const totalPrice = selectedSpaceDetails ? selectedSpaceDetails.price * parseInt(duration) : 0;
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
     if (!selectedDate || !selectedTime || !selectedSpace) {
       toast.error("Please fill in all booking details");
       return;
     }
+    
+    if (!user) {
+      toast.error("Please sign in to make a booking");
+      return;
+    }
 
-    // Here you would integrate with Razorpay
-    toast.success("Booking confirmed! Redirecting to payment...");
-    // Simulate payment flow
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 2000);
+    setIsLoading(true);
+
+    try {
+      // Create Razorpay order
+      const order = await createRazorpayOrder(totalPrice);
+      
+      // Load Razorpay and initiate payment
+      const isLoaded = await loadRazorpay();
+      if (!isLoaded) {
+        throw new Error("Payment gateway failed to load");
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+        amount: order.amount,
+        currency: order.currency,
+        name: "ZLOK",
+        description: `Booking for ${selectedSpaceDetails?.name}`,
+        order_id: order.id,
+        handler: async (response: any) => {
+          try {
+            // Verify payment
+            await verifyRazorpayPayment(response);
+            
+            // Create booking
+            const startTime = new Date(selectedDate);
+            const [hours, minutes] = selectedTime.split(':');
+            startTime.setHours(parseInt(hours), parseInt(minutes));
+            
+            const endTime = new Date(startTime);
+            endTime.setHours(startTime.getHours() + parseInt(duration));
+            
+            const bookingId = await createBooking({
+              userId: user.id,
+              hubId: hub.id as any,
+              spaceId: selectedSpace,
+              startTime: startTime.getTime(),
+              endTime: endTime.getTime(),
+            });
+            
+            // Create payment record
+            await createPayment({
+              userId: user.id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
+              amount: totalPrice,
+              status: "completed",
+            });
+            
+            toast.success("Booking confirmed successfully!");
+            router.push("/dashboard");
+          } catch (error) {
+            toast.error("Payment verification failed");
+          }
+        },
+        prefill: {
+          name: session?.user?.name || "",
+          email: session?.user?.email || "",
+        },
+        theme: {
+          color: "#3B82F6",
+        },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      toast.error("Failed to initiate payment");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
